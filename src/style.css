@@ -36,5 +36,10 @@
 
 #scrolling {
     overflow:auto;
-    height: 33vh;
+    height: 72vh;
+}
+
+#scrolling_receber {
+    overflow:auto;
+    height: 39.4vh;
 }

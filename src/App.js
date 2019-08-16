@@ -100,7 +100,7 @@ class App extends Component {
   
             <div className="row">
               <div className="col s12">
-              <div className="col s5">
+              <div className="col s4">
                   <div className="card darken-1">
                     <div className="card-content white-text">
                       <span style={{ color: 'black' }} className="card-title">Gráfico</span>
@@ -153,44 +153,9 @@ class App extends Component {
                       </table>
                     </div>
                   </div>
-
-                  <div className="card darken-1">
-                    <span style={{ 
-                      color: 'black',
-                      marginLeft: '20px'
-                     }} 
-                    className="card-title">Receber</span>
-
-                    <div id="scrolling" className="card-content white-text">
-                      
-                      <table style={{ color: 'black' }}>
-                        <tbody>
-                          {
-                            this.state.receber.map((dados, i) => (
-                              <tr key={i}>
-                                <td
-                                  style={{color: 'red'}}
-                                > 
-                                  { dados.gasto } 
-                                </td>
-                                <td
-                                  style={{ color: dados.valor >= 100 ? 'red' : 'black' }}
-                                > 
-                                  { dados.valor } 
-                                </td>
-                                <td>
-                                  <i className="material-icons pagar">check</i>
-                                </td>
-                              </tr>
-                            ))
-                          }
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
               </div>
   
-              <div className="col s3">
+              <div className="col s4">
                 <div className="card darken-1">
                   <div className="card-content white-text">
                     <div className="add_gasto">
@@ -270,11 +235,50 @@ class App extends Component {
                       </form>
                     </div> : ''
                     }
-                    
                   </div>
                 
                 </div>
+
+                {
+                  this.state.add_despesa !== true ? 
+                  <div className="card darken-1">
+                    <span style={{ 
+                      color: 'black',
+                      marginLeft: '20px'
+                     }} 
+                    className="card-title">Receber</span>
+
+                    <div id="scrolling_receber" className="card-content white-text">
+                      
+                      <table style={{ color: 'black' }}>
+                        <tbody>
+                          {
+                            this.state.receber.map((dados, i) => (
+                              <tr key={i}>
+                                <td
+                                  style={{color: 'red'}}
+                                > 
+                                  { dados.gasto } 
+                                </td>
+                                <td
+                                  style={{ color: dados.valor >= 100 ? 'red' : 'black' }}
+                                > 
+                                  { dados.valor } 
+                                </td>
+                                <td>
+                                  <i className="material-icons pagar">check</i>
+                                </td>
+                              </tr>
+                            ))
+                          }
+                        </tbody>
+                      </table>
+                    </div>
+                  </div> : ''
+                }
+
               </div>
+              
               </div>
             </div>
   
