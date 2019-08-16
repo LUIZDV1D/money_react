@@ -1,0 +1,40 @@
+.nav_edit {
+    background-color: #5D9DF4;
+}
+
+.texto_money {
+    margin-left: 30%;
+}
+
+.barra_cima {
+    background-color: #5D9DF4;
+    height: 60px;
+}
+
+.menu {
+    background-color: white;
+    height: 97vh;
+}
+
+.add_gasto {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.pagar {
+    color: black;
+    font-size: 30px
+}
+
+.pagar:hover {
+    transition: .2s;
+    color: green;
+    font-size: 30px;
+    cursor: pointer;
+}
+
+#scrolling {
+    overflow:auto;
+    height: 33vh;
+}
