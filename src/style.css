@@ -34,12 +34,26 @@
     cursor: pointer;
 }
 
+.pago {
+    color: black;
+    font-size: 30px
+}
+
+.pago:hover {
+    transition: .2s;
+    color: red;
+    font-size: 30px;
+    cursor: pointer;
+}
+
 #scrolling {
     overflow:auto;
-    height: 72vh;
+    height: 64vh;
 }
 
 #scrolling_receber {
     overflow:auto;
-    height: 39.4vh;
+    height: 23.5vh;
 }
+
+/* verde do joia: #4DD97C */
