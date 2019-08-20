@@ -2,6 +2,7 @@
   import "./style.css"
   import { fbdatabase } from './api'
   import Receber from './components/receber/receber'
+  import { Bar, Line, Pie } from 'react-chartjs-2';
   import moment from 'moment';
   import { Modal, Tabs, Tab } from 'react-materialize';
   import LoadingGastos from './components/loading/loader'
@@ -20,6 +21,14 @@
       receber: [],
       pagos: [],
 
+      valores: [],
+      valores_receber: [],
+      valores_pagos: [],
+
+      soma: [],
+      soma_receber: [],
+      soma_pagos: [],
+
       add_despesa: false,
       value_gasto: '',
       value_valor: '',
@@ -34,10 +43,14 @@
       msg_pagos: '',
 
       l_receber: true,
-      msg_receber: ''
+      msg_receber: '',
+
+      chartData: { }
     }
 
     componentDidMount() {
+
+      // eslint-disable-next-line no-restricted-globals
 
       query.on('value', snap => {
         const itens = snap.val();
@@ -45,7 +58,50 @@
         if (itens != null) {
           const contas = Object.keys(itens).map(i => itens[i]);
 
-          this.setState({ contas, l_gastos: false, msg_gastos: '' });
+          this.setState({ contas, 
+            l_gastos: false, 
+            msg_gastos: ''  
+          });
+
+          this.state.contas.map(dado => {
+            this.setState({ 
+              valores: [...this.state.valores, dado.valor]
+            })
+          })
+
+          const { valores } = this.state;
+
+          let labels = [];
+          let data = [];
+
+          for (let i = 0; i < this.state.contas.length; i++) {
+            
+            labels.push(contas[i].data);
+
+            data.push(parseFloat(contas[i].valor));
+
+            console.log(contas[i])
+            
+          }
+
+          this.setState({
+            chartData: {
+              labels: labels,
+              datasets: [
+                {
+                    label: 'Gastos',
+                    data,
+                    backgroundColor: [ 'rgba(255, 99, 132, 0.2)', ]
+                }
+            ]
+            }
+          })
+
+          const total = valores.reduce((total, numero) => {
+            return parseFloat(total)  + parseFloat(numero);
+          }, 0)
+
+          this.setState({ soma: total });
         }
 
         if (itens == null) {
@@ -61,6 +117,18 @@
           const pagos = Object.keys(itens).map(i => itens[i]);
 
           this.setState({ pagos, l_pagos: false,  msg_pagos: '' });
+
+          this.state.pagos.map(dado => {
+            this.setState({ valores_pagos: [...this.state.valores_pagos, dado.valor] })
+          })
+  
+          const { valores_pagos } = this.state;
+  
+          const total = valores_pagos.reduce((total, numero) => {
+            return parseFloat(total)  + parseFloat(numero);
+          }, 0)
+  
+          this.setState({ soma_pagos: total });
         }
 
         if (itens == null) {
@@ -74,7 +142,24 @@
         if (itens != null) {
           const receber = Object.keys(itens).map(i => itens[i]);
 
-          this.setState({ receber, l_receber: false, msg_receber: '' });
+          this.setState({ 
+            receber, 
+            l_receber: false, 
+            msg_receber: ''
+        });
+
+        this.state.receber.map(dado => {
+          this.setState({ valores_receber: [...this.state.valores_receber, dado.valor] })
+        })
+
+        const { valores_receber } = this.state;
+
+        const total = valores_receber.reduce((total, numero) => {
+          return parseFloat(total)  + parseFloat(numero);
+        }, 0)
+
+        this.setState({ soma_receber: total });
+
         }
 
         if (itens == null) {
@@ -128,11 +213,6 @@
       const { value_pessoa } = this.state;
       const { value_dinheiro } = this.state;
 
-      const m = moment().format('L');
-
-      const d = m.split('/');
-
-      const newDate = `${d[1]}/${d[0]}/${d[2]}`
 
       if (value_pessoa && value_dinheiro !== null) {
         const valores = {
@@ -181,7 +261,7 @@
       })
 
       if (contas.length === 1) {
-        this.setState({ contas: [] })
+        this.setState({ contas: [], msg_gastos: 'Nenhum item encontrado.'  })
       }
 
       query.child(key).remove()
@@ -192,7 +272,7 @@
       const { pagos } = this.state;
 
       if (pagos.length === 1) {
-        this.setState({ pagos: [] })
+        this.setState({ pagos: [], msg_pagos: 'Nenhum item encontrado.' })
       }
 
       const ref = query_pagos;
@@ -214,6 +294,47 @@
                     <div className="card darken-1">
                       <div className="card-content white-text">
                         <span style={{ color: 'black' }} className="card-title">Gráfico</span>
+                        <table>
+                          <tbody>
+                          <tr>
+                              <td style={{ color: 'black' }}>
+                                <h6>Pagas: </h6> 
+                              </td>
+                              <td></td>
+                              <td></td>
+                              <td style={{ color: 'red' }}>
+                                <h6> { `R$ ${this.state.soma_pagos}` } </h6> 
+                              </td>
+                            </tr>
+                            <tr>
+                              <td style={{ color: 'black' }}>
+                                <h6>Pendentes: </h6> 
+                              </td>
+                              <td></td>
+                              <td></td>
+                              <td style={{ color: 'red' }}>
+                                <h6> { `R$ ${this.state.soma}` } </h6> 
+                              </td>
+                            </tr>
+                            <tr>
+                              <td style={{ color: 'black' }}>
+                                <h6>Receber: </h6> 
+                              </td>
+                              <td></td>
+                              <td></td>
+                              <td style={{ color: 'red' }}>
+                                <h6> { `R$ ${this.state.soma_receber}` } </h6> 
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                        <Line 
+                          data = {this.state.chartData}
+                          options = {{
+                              display: true,
+                              title: 'Tabela de gastos'
+                          }}
+                        />
                       </div>
                     </div>
                 </div>
@@ -425,7 +546,7 @@
 
                   {
                     this.state.add_despesa !== true ?
-                    <div>
+                    <div id="recive">
                         <ul className="collection">
                           <li className="collection-item">
                             A receber
