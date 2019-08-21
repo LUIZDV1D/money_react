@@ -21,10 +21,6 @@
       receber: [],
       pagos: [],
 
-      valores: [],
-      valores_receber: [],
-      valores_pagos: [],
-
       soma: [],
       soma_receber: [],
       soma_pagos: [],
@@ -52,29 +48,29 @@
 
       // eslint-disable-next-line no-restricted-globals
 
+      //QUERY DOS GASTOS
+
       query.on('value', snap => {
         const itens = snap.val();
 
         if (itens != null) {
           const contas = Object.keys(itens).map(i => itens[i]);
 
-          this.setState({ contas, 
-            l_gastos: false, 
-            msg_gastos: ''  
-          });
+          let total = [];
 
-          this.state.contas.map(dado => {
-            this.setState({ 
-              valores: [...this.state.valores, dado.valor]
-            })
-          })
+          total = contas.map(d => (
+            d.valor
+          )) 
 
-          const { valores } = this.state;
+          let t = total.reduce((to, numero) => {
+            return parseFloat(to)  + parseFloat(numero);
+          }, 0)
 
-          let labels = [];
-          let data = [];
+           let labels = [];
+           let data = [];
 
-          for (let i = 0; i < this.state.contas.length; i++) {
+
+          for (let i = 0; i < contas.length; i++) {
             
             labels.push(contas[i].data);
 
@@ -84,31 +80,40 @@
             
           }
 
-          this.setState({
+          this.setState({ 
+            contas, 
+            soma: t,
+            l_gastos: false, 
+            msg_gastos: '',
             chartData: {
-              labels: labels,
+              labels: labels  ,
               datasets: [
                 {
                     label: 'Gastos',
                     data,
                     backgroundColor: [ 'rgba(255, 99, 132, 0.2)', ]
                 }
-            ]
+              ]
             }
-          })
-
-          const total = valores.reduce((total, numero) => {
-            return parseFloat(total)  + parseFloat(numero);
-          }, 0)
-
-          this.setState({ soma: total });
+          });
         }
 
         if (itens == null) {
-          this.setState({ l_gastos: false, msg_gastos: 'Nenhum item encontrado.' });
+          this.setState({ 
+            l_gastos: false, 
+            msg_gastos: 'Nenhum item encontrado.',
+            contas: [],
+            soma: [],
+            chartData: {
+              labels: []  ,
+              datasets: []
+            }
+          });
         }
 
       })
+
+      //QUERY DOS PAGOS
 
       query_pagos.on('value', snap => {
         const itens = snap.val();
@@ -116,54 +121,73 @@
         if (itens != null) {
           const pagos = Object.keys(itens).map(i => itens[i]);
 
-          this.setState({ pagos, l_pagos: false,  msg_pagos: '' });
+          let total_pagos = [];
 
-          this.state.pagos.map(dado => {
-            this.setState({ valores_pagos: [...this.state.valores_pagos, dado.valor] })
-          })
-  
-          const { valores_pagos } = this.state;
-  
-          const total = valores_pagos.reduce((total, numero) => {
-            return parseFloat(total)  + parseFloat(numero);
+          total_pagos = pagos.map(d => (
+            d.valor
+          )) 
+
+          let t_pagos = total_pagos.reduce((to, numero) => {
+            return parseFloat(to)  + parseFloat(numero);
           }, 0)
-  
-          this.setState({ soma_pagos: total });
+
+
+          this.setState({ 
+            pagos, 
+            soma_pagos: t_pagos,
+            l_pagos: false,  
+            msg_pagos: ''
+          });
+
         }
 
         if (itens == null) {
-          this.setState({ l_pagos: false, msg_pagos: 'Nenhum item encontrado.' });
+          this.setState({ 
+            l_pagos: false, 
+            msg_pagos: 'Nenhum item encontrado.',
+            pagos: [],
+            soma_pagos: []
+          });
         }
       })
 
+      //QUERY PARA RECEBER
+
       query_receber.on('value', snap => {
-        const itens = snap.val();
+        let itens = snap.val();
 
         if (itens != null) {
-          const receber = Object.keys(itens).map(i => itens[i]);
+          let receber = Object.keys(itens).map(i => itens[i]);
 
-          this.setState({ 
-            receber, 
-            l_receber: false, 
-            msg_receber: ''
-        });
+          let total_receber = [];
 
-        this.state.receber.map(dado => {
-          this.setState({ valores_receber: [...this.state.valores_receber, dado.valor] })
-        })
+          total_receber = receber.map(d => (
+            d.valor
+          )) 
 
-        const { valores_receber } = this.state;
+          let t_receber = total_receber.reduce((to, numero) => {
+            return parseFloat(to)  + parseFloat(numero);
+          }, 0)
 
-        const total = valores_receber.reduce((total, numero) => {
-          return parseFloat(total)  + parseFloat(numero);
-        }, 0)
+          if (itens != null) {
+            
+          }
 
-        this.setState({ soma_receber: total });
-
-        }
-
-        if (itens == null) {
-          this.setState({ l_receber: false, msg_receber: 'Nenhum item encontrado.' });
+          setInterval(() => {
+              this.setState({ 
+                receber,
+                soma_receber: t_receber,
+                l_receber: false,
+                msg_receber: ''
+            });
+          }, 1000)
+        } else {
+            this.setState({ 
+              l_receber: false, 
+              msg_receber: 'Nenhum item encontrado.',
+              receber: [],
+              soma_receber: []
+            });
         }
       })
     }
@@ -280,12 +304,28 @@
       ref.child(key).remove()
     }
 
+    _handleExit = () => {
+      const uid =  localStorage.getItem("u:money");
+      localStorage.removeItem("u:money", uid);
+      // eslint-disable-next-line no-restricted-globals
+      window.location.reload();
+    }
+
     render() {
       return (
         <div>
           <div className="row">
               <div className="col s12">
-                <h4>Geral</h4>
+                <h4>
+                  Geral 
+                  <i
+                    onClick={ () => this._handleExit() }
+                    id='bt_sair'
+                    style={{color: 'red'}}
+                    className="material-icons right">
+                    clear
+                  </i>
+                </h4>
               </div>
 
               <div className="row">
@@ -328,6 +368,7 @@
                             </tr>
                           </tbody>
                         </table>
+                        <br />
                         <Line 
                           data = {this.state.chartData}
                           options = {{

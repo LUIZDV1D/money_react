@@ -56,4 +56,8 @@
     height: 23.5vh;
 }
 
+#bt_sair:hover {
+    cursor: pointer;
+}
+
 /* verde do joia: #4DD97C */
