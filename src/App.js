@@ -336,6 +336,10 @@
             >
               Sobre
             </NavItem>
+
+            <NavItem onClick={() => this._handleExit()}>
+              Sair
+            </NavItem>
           </Navbar>
           <div className="row">
             <br /><br />
