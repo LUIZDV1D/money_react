@@ -93,7 +93,7 @@ class Login extends Component {
                 </Button>
                 <p style={{ color: 'red' }}>
                   * Cadastro: digite email e senha e clique em "Cadastrar-se".
-                  <p> * Entrar: digite email e senha e clique em "Entar". </p>
+                  <p> * Entrar: digite email e senha e clique em "Entrar". </p>
                 </p>
               </Form>
             </Col>
