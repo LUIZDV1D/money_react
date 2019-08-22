@@ -4,6 +4,7 @@
   import Receber from './components/receber/receber'
   import { Line } from 'react-chartjs-2';
   import moment from 'moment';
+  import jspdf from 'jspdf';
   import { Modal, Tabs, Tab, Footer, Navbar, NavItem } from 'react-materialize';
   import LoadingGastos from './components/loading/loader'
   import LoadingPagos from './components/loading/loaderPagos'
@@ -319,6 +320,23 @@
       window.location.reload();
     }
 
+    _handleGerarPdf = () => {
+
+      const m = moment().format('L');
+
+      const d = m.split('/');
+
+      const newDate = `${d[1]}/${d[0]}/${d[2]}`
+
+      const doc = new jspdf();
+      doc.setFontSize(30);
+      doc.text(65, 25, "Sua receita \n");
+      doc.text(`Gastos no momento: R$ ${this.state.soma} \n`, 35, 45)
+      doc.text(`Pagos no momento: R$ ${this.state.soma_pagos} \n`, 35, 65)
+      doc.text(`A receber no momento: R$ ${this.state.soma_receber} \n`, 35, 85)
+      doc.save(`receita - ${newDate}.pdf`)
+    }
+
     render() {
       return (
         <div>
@@ -537,9 +555,12 @@
                       </div>
 
                       <br />
-
-                      <div className="add_gasto">
-                        <a className="btn-floating btn-large waves-effect waves-light green">
+                      {
+                        this.state.l_receber === false ? 
+                        <div className="add_gasto">
+                        <a
+                        onClick={() => this._handleGerarPdf()} 
+                        className="btn-floating btn-large waves-effect waves-light green">
                           <i className="material-icons">add</i>
                         </a>
                         <span
@@ -552,7 +573,8 @@
                         className="card-title">
                           Nova receita
                         </span>
-                      </div>
+                      </div> : ''
+                      }
 
                       <br />
                       {
