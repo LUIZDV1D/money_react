@@ -553,8 +553,22 @@
                           Nova despesa
                         </span>
                       </div>
+                      <div className="add_gasto">
+                        <a href="#modal" className="modal-trigger btn-floating btn-large waves-effect waves-light red">
+                          <i className="material-icons">add</i>
+                        </a>
+                        <span
+                          style=
+                          {{
+                            color: 'black',
+                            marginTop: '10px',
+                            marginLeft: '20px'
+                          }}
+                          className="card-title">
+                            Nova divida
+                          </span>
+                      </div>
 
-                      <br />
                       {
                         this.state.l_receber === false ? 
                         <div className="add_gasto">
@@ -575,8 +589,6 @@
                         </span>
                       </div> : ''
                       }
-
-                      <br />
                       {
                         this.state.add_despesa !== false ?
                         <div className="add_gasto">
@@ -628,12 +640,8 @@
                     <div id="recive">
                         <ul className="collection">
                           <li className="collection-item">
-                            A receber
+                           <p> A receber </p> 
                             <br />
-                            <br />
-                        <a href="#modal" className="modal-trigger btn-floating btn-large waves-effect waves-light red">
-                            <i className="material-icons">add</i>
-                        </a>  <span> Nova divida </span>
 
                         <Modal id="modal" header="Informações da divida">
                         <br />
@@ -664,7 +672,6 @@
                           </button>
 
                         </Modal>
-                        <br />
                         <Receber dados={this.state} />
                           </li>
                         </ul>
