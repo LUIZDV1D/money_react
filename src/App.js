@@ -2,9 +2,9 @@
   import "./style.css"
   import { fbdatabase } from './api'
   import Receber from './components/receber/receber'
-  import { Bar, Line, Pie } from 'react-chartjs-2';
+  import { Line } from 'react-chartjs-2';
   import moment from 'moment';
-  import { Modal, Tabs, Tab, Footer } from 'react-materialize';
+  import { Modal, Tabs, Tab, Footer, Navbar, NavItem } from 'react-materialize';
   import LoadingGastos from './components/loading/loader'
   import LoadingPagos from './components/loading/loaderPagos'
 
@@ -321,35 +321,24 @@
     render() {
       return (
         <div>
+          <Navbar fixed className="green" alignLinks="left">
+            <h5>Money: Sistema para gastos pessoais</h5>
+            <NavItem
+              onClick={
+                () => alert(
+                  "Sobre: \n"
+                  +"Cadastrar despesas gerais: \n"
+                  +"-Gastos \n"
+                  +"-Pagar os gastos \n"
+                  +"-Dividas"
+                )
+              }
+            >
+              Sobre
+            </NavItem>
+          </Navbar>
           <div className="row">
-              <div className="col s12">
-                <h4>
-                  Money: Sistema para gastos pessoais
-                  <i
-                    onClick={
-                      () => alert(
-                        "Sobre: \n"
-                        +"Cadastrar despesas gerais: \n"
-                        +"-Gastos \n"
-                        +"-Pagar os gastos \n"
-                        +"-Dividas"
-                      )
-                    }
-                    id="about"
-                    style={{ color: 'green' }} 
-                    className="material-icons">
-                    description
-                  </i>
-                  <i
-                    onClick={ () => this._handleExit() }
-                    id='bt_sair'
-                    style={{color: 'red'}}
-                    className="material-icons right">
-                    clear
-                  </i>
-                </h4>
-              </div>
-
+            <br /><br />
               <div className="row">
                 <div className="col s12">
                 <div className="col s4">
@@ -661,7 +650,7 @@
 
             </div>
             <Footer 
-              style={{ backgroundColor: '#4DD97C' }}
+              style={{ backgroundColor: 'green' }}
               copyrights="2019 Copyright Todos os direitos reservados." />
         </div>
       );
