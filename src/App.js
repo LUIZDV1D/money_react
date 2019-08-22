@@ -264,6 +264,7 @@
               value_pessoa: '',
               value_dinheiro: ''
              })
+             window.location.reload()
           }
         })
       }
