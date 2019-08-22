@@ -4,15 +4,17 @@
   import Receber from './components/receber/receber'
   import { Bar, Line, Pie } from 'react-chartjs-2';
   import moment from 'moment';
-  import { Modal, Tabs, Tab } from 'react-materialize';
+  import { Modal, Tabs, Tab, Footer } from 'react-materialize';
   import LoadingGastos from './components/loading/loader'
   import LoadingPagos from './components/loading/loaderPagos'
 
-  const query = fbdatabase.ref('contas');
+  const UID = localStorage.getItem('u:money');
 
-  const query_pagos = fbdatabase.ref('pagos');
+  const query = fbdatabase.ref(`${UID}/contas`);
 
-  const query_receber = fbdatabase.ref('receber');
+  const query_pagos = fbdatabase.ref(`${UID}/pagos`);
+
+  const query_receber = fbdatabase.ref(`${UID}/receber`);
 
   class App extends Component {
 
@@ -199,13 +201,18 @@
       const { value_gasto } = this.state;
       const { value_valor} = this.state;
 
-      const m = moment().format('L');
+      if (value_gasto === '' && value_valor === '') {
+        
+      } else if (value_gasto === '' || value_valor === '') {
+        
+      } else if (value_gasto && value_valor !== null) {
 
-      const d = m.split('/');
+        const m = moment().format('L');
 
-      const newDate = `${d[1]}/${d[0]}/${d[2]}`
+        const d = m.split('/');
 
-      if (value_gasto && value_valor !== null) {
+        const newDate = `${d[1]}/${d[0]}/${d[2]}`
+
         const valores = {
           id,
           gasto: this.state.value_gasto,
@@ -225,9 +232,8 @@
              })
           }
         })
-      } else {
-
       }
+
     }
 
     _handleAddDivida(){
@@ -237,8 +243,11 @@
       const { value_pessoa } = this.state;
       const { value_dinheiro } = this.state;
 
-
-      if (value_pessoa && value_dinheiro !== null) {
+      if (value_pessoa === '' && value_dinheiro === '') {
+        
+      } else if (value_pessoa === '' || value_dinheiro === '') {
+        
+      } else if (value_pessoa && value_dinheiro !== null) {
         const valores = {
           id,
           pessoa: this.state.value_pessoa,
@@ -257,8 +266,6 @@
              })
           }
         })
-      } else {
-
       }
     }
 
@@ -317,7 +324,22 @@
           <div className="row">
               <div className="col s12">
                 <h4>
-                  Geral 
+                  Money: Sistema para gastos pessoais
+                  <i
+                    onClick={
+                      () => alert(
+                        "Sobre: \n"
+                        +"Cadastrar despesas gerais: \n"
+                        +"-Gastos \n"
+                        +"-Pagar os gastos \n"
+                        +"-Dividas"
+                      )
+                    }
+                    id="about"
+                    style={{ color: 'green' }} 
+                    className="material-icons">
+                    description
+                  </i>
                   <i
                     onClick={ () => this._handleExit() }
                     id='bt_sair'
@@ -638,6 +660,9 @@
               </div>
 
             </div>
+            <Footer 
+              style={{ backgroundColor: '#4DD97C' }}
+              copyrights="2019 Copyright Todos os direitos reservados." />
         </div>
       );
     }

@@ -48,15 +48,19 @@
 
 #scrolling {
     overflow:auto;
-    height: 64vh;
+    height: 62vh;
 }
 
 #scrolling_receber {
     overflow:auto;
-    height: 23.5vh;
+    height: 24vh;
 }
 
 #bt_sair:hover {
+    cursor: pointer;
+}
+
+#about:hover {
     cursor: pointer;
 }
 

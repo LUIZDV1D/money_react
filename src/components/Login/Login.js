@@ -10,8 +10,8 @@ import './style_login.css';
 
 class Login extends Component {
   state = {
-    email: "david@gmail.com",
-    password: "qwerty"
+    email: "",
+    password: "",
   };
 
   _handleSubmit = e => {
@@ -34,49 +34,72 @@ class Login extends Component {
         }, 1000);
       })
       .catch(error => {
-        alert("erro");
+        alert(error);
       });
   };
+
+  _handleSignUp = () => {
+    const { email, password } = this.state;
+    auth
+    .createUserWithEmailAndPassword(email, password)
+    .then(res => {
+      ToastsStore.success("Cadastradado com sucesso");
+    })
+    .catch(err => {
+      alert(err);
+    })
+  }
 
   render() {
     const { email, password } = this.state;
     return (
       <Container className="flex ai-center jc-center">
+        
         <br /><br /><br /><br /><br /><br /><br />
-        <div className="content-box-login">
+          <div className="content-box-login">
           <Row id='div_login'>
             <Col>
-              <ToastsContainer
+            <ToastsContainer
                 store={ToastsStore}
                 position={ToastsContainerPosition.BOTTOM_CENTER}
               />
               <Form onSubmit={this._handleSubmit}>
                 <Form.Group controlId="formBasicEmail">
-                  <Form.Label>Email address</Form.Label>
+                  <Form.Label>Email</Form.Label>
                   <Form.Control
                     value={email}
                     onChange={e => this.setState({ email: e.target.value })}
                     type="email"
-                    placeholder="Enter email"
+                    placeholder="Email válido"
                   />
                 </Form.Group>
 
                 <Form.Group controlId="formBasicPassword">
-                  <Form.Label>Password</Form.Label>
+                  <Form.Label>Senha</Form.Label>
                   <Form.Control
                     value={password}
                     onChange={e => this.setState({ password: e.target.value })}
                     type="password"
-                    placeholder="Password"
+                    placeholder="Senha válida"
                   />
                 </Form.Group>
                 <Button className="green" variant="primary" type="submit">
                   Entrar
                 </Button>
+                <br /><br />
+                <Button onClick={ () => this._handleSignUp() } 
+                  className="blue" variant="primary" type="button">
+                  Cadastrar-se
+                </Button>
+                <p style={{ color: 'red' }}>
+                  * Cadastro: digite email e senha e clique em "Cadastrar-se".
+                  <p> * Entrar: digite email e senha e clique em "Entar". </p>
+                </p>
               </Form>
             </Col>
           </Row>
         </div>
+        
       </Container>
     );
   }
